@@ -10,7 +10,7 @@ load_dotenv()
 
 ACCOUNTS_BUTTON_XPATH = "/html/body/app-root/app-container/div/aside/ul/li[2]/a"
 ACCOUNT_DETAILS_XPATH = "/html/body/app-root/app-container/div/div/app-main-account/page-loader/section/div[3]/a[1]/span"
-STATMENT_BUTTON_XPATH = "/html/body/app-root/app-container/div/div/sbl-account/page-loader/div/sbl-saving-account/app-tabs/ul/li[3]/button"
+STATEMENT_BUTTON_XPATH = "/html/body/app-root/app-container/div/div/sbl-account/page-loader/div/sbl-saving-account/app-tabs/ul/li[3]/button"
 
 SCRAPE_URL = os.getenv("SCRAPE_URL")
 LOGIN_USERNAME = os.getenv("LOGIN_USERNAME")
@@ -77,7 +77,7 @@ def main():
         my_page.locator(f"xpath={ACCOUNT_DETAILS_XPATH}").click()
         time.sleep(SLEEP_TIME)
 
-        my_page.locator(f"xpath={STATMENT_BUTTON_XPATH}").click()
+        my_page.locator(f"xpath={STATEMENT_BUTTON_XPATH}").click()
         time.sleep(SLEEP_TIME)
 
         html = my_page.content()

@@ -11,6 +11,8 @@ load_dotenv()
 ACCOUNTS_BUTTON_XPATH = "/html/body/app-root/app-container/div/aside/ul/li[2]/a"
 ACCOUNT_DETAILS_XPATH = "/html/body/app-root/app-container/div/div/app-main-account/page-loader/section/div[3]/a[1]/span"
 STATEMENT_BUTTON_XPATH = "/html/body/app-root/app-container/div/div/sbl-account/page-loader/div/sbl-saving-account/app-tabs/ul/li[3]/button"
+DATE_RANGE_BUTTON_XPATH = "/html/body/app-root/app-container/div/div/sbl-account/page-loader/div/sbl-saving-account/app-tabs/sbl-account-statement/section/div[1]/form/button"
+LAST_30_DAY_BUTTON_XPATH = "/html/body/bs-daterangepicker-container/div/div[2]/bs-custom-date-view/div/button[2]"
 
 SCRAPE_URL = os.getenv("SCRAPE_URL")
 LOGIN_USERNAME = os.getenv("LOGIN_USERNAME")
@@ -80,12 +82,25 @@ def main():
         my_page.locator(f"xpath={STATEMENT_BUTTON_XPATH}").click()
         time.sleep(SLEEP_TIME)
 
-        html = my_page.content()
-        soup = BeautifulSoup(html, "html.parser")
+        pagination_buttons = my_page.locator('.pagination__content .pagination__item .pagination__button')
 
-        tr_tags = soup.find_all("tr")
+        # Handle pagination
+        print("Len of pagination buttons", pagination_buttons.count())
+        for i in range(pagination_buttons.count()):
+            button_text = pagination_buttons.nth(i).inner_text().strip()
+            
+            if button_text.lower() == "last":
+                break
 
-        get_transaction_details_from_statement_table(tr_tags)
+            if button_text.isdigit():
+                pagination_buttons.nth(i).click()
+                time.sleep(SLEEP_TIME)
+
+                html = my_page.content()
+                soup = BeautifulSoup(html, "html.parser")
+                tr_tags = soup.find_all("tr")
+
+                get_transaction_details_from_statement_table(tr_tags)
 
 
 if __name__ == "__main__":
